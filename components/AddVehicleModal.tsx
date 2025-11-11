@@ -41,7 +41,7 @@ const AddVehicleModal: React.FC<AddVehicleModalProps> = ({ isOpen, onClose, onAd
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const finalImageUrl = imageUrl || `https://placehold.co/300x200/1e293b/ffffff?text=${encodeURIComponent(make)}+${encodeURIComponent(model)}`;
+    const finalImageUrl = imageUrl || 'images/placeholder-vehicle.jpg';
     onAddVehicle({ make, model, year, price, vin, imageUrl: finalImageUrl, description });
     onClose(); // Close modal after submission
     // Reset form

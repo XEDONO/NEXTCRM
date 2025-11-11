@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Icon from './Icon';
 import ProfileDropdown from './ProfileDropdown';
+import { DealerProfile } from '../types';
 
 interface HeaderProps {
     title: string;
@@ -8,9 +9,10 @@ interface HeaderProps {
     theme: string;
     setTheme: (theme: string) => void;
     onProfileClick: () => void;
+    profile: DealerProfile;
 }
 
-const Header: React.FC<HeaderProps> = ({ title, onMenuClick, theme, setTheme, onProfileClick }) => {
+const Header: React.FC<HeaderProps> = ({ title, onMenuClick, theme, setTheme, onProfileClick, profile }) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   const toggleTheme = () => {
@@ -33,11 +35,15 @@ const Header: React.FC<HeaderProps> = ({ title, onMenuClick, theme, setTheme, on
          <button onClick={toggleTheme} className="text-slate-500 dark:text-slate-400 hover:text-indigo-500 dark:hover:text-indigo-400 p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
             <Icon name={theme === 'dark' ? 'sun' : 'moon'} className="w-6 h-6" />
         </button>
-        <div className="relative">
-             <button onClick={() => setIsProfileOpen(!isProfileOpen)} className="w-10 h-10 bg-slate-200 dark:bg-slate-700 rounded-full flex items-center justify-center text-indigo-500 dark:text-indigo-400 font-bold border-2 border-transparent hover:border-indigo-500 transition-colors">
-                AJ
+        <div className="relative" onMouseLeave={() => setIsProfileOpen(false)}>
+             <button onMouseEnter={() => setIsProfileOpen(true)} onClick={() => setIsProfileOpen(!isProfileOpen)} className="w-10 h-10 bg-slate-200 dark:bg-slate-700 rounded-full flex items-center justify-center text-indigo-500 dark:text-indigo-400 font-bold border-2 border-transparent hover:border-indigo-500 transition-colors overflow-hidden">
+                <img 
+                  src={profile.logoUrl} 
+                  alt={`${profile.name} logo`}
+                  className="w-full h-full object-cover"
+                />
              </button>
-             {isProfileOpen && <ProfileDropdown onEditProfile={() => { onProfileClick(); setIsProfileOpen(false); }} />}
+             {isProfileOpen && <ProfileDropdown onEditProfile={() => { onProfileClick(); setIsProfileOpen(false); }} profile={profile} />}
         </div>
       </div>
     </header>

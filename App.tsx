@@ -12,6 +12,7 @@ import WebsiteBuilder from './components/WebsiteBuilder';
 import AddVehicleModal from './components/AddVehicleModal';
 import AddCustomerModal from './components/AddCustomerModal';
 import AIAssistant from './components/AIAssistant';
+import EditVehicleModal from './components/EditVehicleModal';
 import ProfileModal from './components/ProfileModal';
 import Sales from './components/Sales';
 
@@ -21,7 +22,7 @@ const initialProfile: DealerProfile = {
   phone: '020 7946 0918',
   address: '123 Regent Street, London, W1B 5TH',
   vatNumber: 'GB123456789',
-  logoUrl: 'https://placehold.co/100x100/4f46e5/ffffff?text=AJ'
+  logoUrl: ''
 };
 
 const App: React.FC = () => {
@@ -38,13 +39,19 @@ const App: React.FC = () => {
   });
   const [profile, setProfile] = useState<DealerProfile>(() => {
     const savedProfile = localStorage.getItem('profile');
-    return savedProfile ? JSON.parse(savedProfile) : initialProfile;
+    const loadedProfile = savedProfile ? JSON.parse(savedProfile) : initialProfile;
+    if (!loadedProfile.logoUrl && loadedProfile.name) {
+      loadedProfile.logoUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(loadedProfile.name)}&background=4f46e5&color=fff&size=128`;
+    }
+    return loadedProfile;
   });
   
   const [isVehicleModalOpen, setIsVehicleModalOpen] = useState(false);
   const [isCustomerModalOpen, setIsCustomerModalOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [isEditVehicleModalOpen, setIsEditVehicleModalOpen] = useState(false);
+  const [vehicleToEdit, setVehicleToEdit] = useState<Vehicle | null>(null);
   
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
 
@@ -82,6 +89,17 @@ const App: React.FC = () => {
     setVehicles([newVehicle, ...vehicles]);
   };
   
+  const handleEditVehicleClick = (vehicle: Vehicle) => {
+    setVehicleToEdit(vehicle);
+    setIsEditVehicleModalOpen(true);
+  };
+
+  const handleUpdateVehicle = (updatedVehicle: Vehicle) => {
+    setVehicles(vehicles.map(v => v.id === updatedVehicle.id ? updatedVehicle : v));
+    setIsEditVehicleModalOpen(false);
+    setVehicleToEdit(null);
+  };
+
   const handleDeleteVehicle = (id: number) => {
     if(window.confirm('Are you sure you want to delete this vehicle?')) {
       setVehicles(vehicles.filter(v => v.id !== id));
@@ -95,6 +113,12 @@ const App: React.FC = () => {
     };
     setCustomers([newCustomer, ...customers]);
   }
+  
+  const handleDeleteCustomer = (id: number) => {
+    if(window.confirm('Are you sure you want to delete this customer?')) {
+      setCustomers(customers.filter(c => c.id !== id));
+    }
+  }
 
   const handleUpdateProfile = (newProfile: DealerProfile) => {
     setProfile(newProfile);
@@ -106,9 +130,9 @@ const App: React.FC = () => {
       case 'dashboard':
         return <Dashboard vehicles={vehicles} customers={customers} salesData={salesData} profile={profile} />;
       case 'inventory':
-        return <Inventory vehicles={vehicles} onAddVehicleClick={() => setIsVehicleModalOpen(true)} onDeleteVehicle={handleDeleteVehicle} />;
+        return <Inventory vehicles={vehicles} onAddVehicleClick={() => setIsVehicleModalOpen(true)} onEditVehicleClick={handleEditVehicleClick} onDeleteVehicle={handleDeleteVehicle} />;
       case 'customers':
-        return <Customers customers={customers} onAddCustomerClick={() => setIsCustomerModalOpen(true)} />;
+        return <Customers customers={customers} onAddCustomerClick={() => setIsCustomerModalOpen(true)} onDeleteCustomer={handleDeleteCustomer} />;
       case 'website':
         return <WebsiteBuilder vehicles={vehicles.filter(v => v.status === 'In Stock')} profile={profile} />;
       case 'sales':
@@ -145,6 +169,7 @@ const App: React.FC = () => {
             theme={theme}
             setTheme={setTheme}
             onProfileClick={() => setIsProfileModalOpen(true)}
+            profile={profile}
         />
         <main className="flex-1 overflow-y-auto">
           {renderView()}
@@ -161,6 +186,13 @@ const App: React.FC = () => {
         isOpen={isCustomerModalOpen}
         onClose={() => setIsCustomerModalOpen(false)}
         onAddCustomer={handleAddCustomer}
+      />
+
+      <EditVehicleModal
+        isOpen={isEditVehicleModalOpen}
+        onClose={() => setIsEditVehicleModalOpen(false)}
+        onUpdateVehicle={handleUpdateVehicle}
+        vehicle={vehicleToEdit}
       />
 
       <ProfileModal 

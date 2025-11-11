@@ -3,12 +3,12 @@ import { Vehicle, DealerProfile } from '../types';
 import Icon from './Icon';
 
 const templates = [
-  { name: 'Modern', imageUrl: 'https://placehold.co/400x300/1e293b/ffffff?text=Modern+Design' },
-  { name: 'Classic', imageUrl: 'https://placehold.co/400x300/475569/ffffff?text=Classic+Look' },
-  { name: 'Bold', imageUrl: 'https://placehold.co/400x300/be123c/ffffff?text=Bold+Statement' },
-  { name: 'Minimalist', imageUrl: 'https://placehold.co/400x300/e2e8f0/1e293b?text=Minimalist' },
-  { name: 'Luxury', imageUrl: 'https://placehold.co/400x300/a16207/ffffff?text=Luxury+Feel' },
-  { name: 'Dynamic', imageUrl: 'https://placehold.co/400x300/4f46e5/ffffff?text=Dynamic+Vibes' },
+  { name: 'Modern', imageUrl: 'https://images.pexels.com/photos/1402787/pexels-photo-1402787.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&dpr=1' },
+  { name: 'Classic', imageUrl: 'https://images.pexels.com/photos/358070/pexels-photo-358070.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&dpr=1' },
+  { name: 'Bold', imageUrl: 'https://images.pexels.com/photos/170811/pexels-photo-170811.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&dpr=1' },
+  { name: 'Minimalist', imageUrl: 'https://images.pexels.com/photos/244206/pexels-photo-244206.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&dpr=1' },
+  { name: 'Luxury', imageUrl: 'https://images.pexels.com/photos/3729464/pexels-photo-3729464.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&dpr=1' },
+  { name: 'Dynamic', imageUrl: 'https://images.pexels.com/photos/919073/pexels-photo-919073.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&dpr=1' },
 ];
 
 interface TemplateCardProps {
@@ -58,7 +58,7 @@ const WebsiteBuilder: React.FC<WebsiteBuilderProps> = ({ vehicles, profile }) =>
            </nav>
         </header>
         <main className="font-sans">
-            <div className="bg-cover bg-center h-96 flex items-center justify-center" style={{backgroundImage: "url('https://loremflickr.com/1280/720/car,dealership/all')"}}>
+            <div className="bg-cover bg-center h-96 flex items-center justify-center" style={{backgroundImage: "url('images/website-hero.jpg')"}}>
                 <div className="bg-black/60 p-8 rounded-lg text-center">
                     <h2 className="text-5xl font-extrabold text-white">Find Your Next Ride</h2>
                     <p className="text-xl text-slate-200 mt-2">Premium selection of quality used vehicles.</p>

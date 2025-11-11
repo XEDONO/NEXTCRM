@@ -25,7 +25,11 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose, profile, o
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave(formData);
+    const finalData = { ...formData };
+    if (!finalData.logoUrl) {
+      finalData.logoUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(finalData.name)}&background=4f46e5&color=fff&size=128`;
+    }
+    onSave(finalData);
   };
 
   return (

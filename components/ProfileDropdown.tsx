@@ -1,16 +1,18 @@
 import React from 'react';
 import Icon from './Icon';
+import { DealerProfile } from '../types';
 
 interface ProfileDropdownProps {
   onEditProfile: () => void;
+  profile: DealerProfile;
 }
 
-const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ onEditProfile }) => {
+const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ onEditProfile, profile }) => {
   return (
     <div className="absolute top-full right-0 mt-2 w-56 bg-slate-50 dark:bg-slate-800 rounded-lg shadow-2xl border border-slate-200 dark:border-slate-700 animate-fade-in p-2 z-30">
       <div className="p-2">
-        <p className="font-bold text-slate-800 dark:text-white">Alex Jones</p>
-        <p className="text-sm text-slate-500 dark:text-slate-400">AJ Motors</p>
+        <p className="font-bold text-slate-800 dark:text-white truncate">{profile.name}</p>
+        <p className="text-sm text-slate-500 dark:text-slate-400 truncate">{profile.email}</p>
       </div>
       <div className="h-px bg-slate-200 dark:bg-slate-700 my-1"></div>
       <ul>

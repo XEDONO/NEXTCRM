@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Customer } from '../types';
 import Icon from './Icon';
 
 interface CustomersProps {
   customers: Customer[];
   onAddCustomerClick: () => void;
+  onDeleteCustomer: (id: number) => void;
 }
 
 const getStatusColor = (status: Customer['status']) => {
@@ -16,7 +17,7 @@ const getStatusColor = (status: Customer['status']) => {
     }
 }
 
-const CustomerRow: React.FC<{ customer: Customer }> = ({ customer }) => (
+const CustomerRow: React.FC<{ customer: Customer; onDelete: () => void; }> = ({ customer, onDelete }) => (
     <tr className="border-b border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors duration-200">
         <td className="p-4 text-slate-900 dark:text-white font-medium">{customer.name}</td>
         <td className="p-4 text-slate-600 dark:text-slate-300">{customer.email}</td>
@@ -30,18 +31,31 @@ const CustomerRow: React.FC<{ customer: Customer }> = ({ customer }) => (
         <td className="p-4">
              <div className="flex items-center space-x-2">
                 <button className="p-2 text-slate-500 dark:text-slate-400 hover:text-indigo-500 dark:hover:text-indigo-400 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"><Icon name="edit" className="w-5 h-5" /></button>
-                <button className="p-2 text-slate-500 dark:text-slate-400 hover:text-red-500 dark:hover:text-red-400 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"><Icon name="trash" className="w-5 h-5" /></button>
+                <button onClick={onDelete} className="p-2 text-slate-500 dark:text-slate-400 hover:text-red-500 dark:hover:text-red-400 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"><Icon name="trash" className="w-5 h-5" /></button>
             </div>
         </td>
     </tr>
 )
 
-const Customers: React.FC<CustomersProps> = ({ customers, onAddCustomerClick }) => {
+const Customers: React.FC<CustomersProps> = ({ customers, onAddCustomerClick, onDeleteCustomer }) => {
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredCustomers = customers.filter(customer =>
+    `${customer.name} ${customer.email} ${customer.phone}`
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="p-6 animate-fade-in">
       <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
         <div className="relative w-full max-w-xs">
-          <input type="text" placeholder="Search customers..." className="w-full bg-slate-200 dark:bg-slate-700 p-3 pl-10 rounded-lg text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors duration-300" />
+          <input 
+            type="text" 
+            placeholder="Search customers..." 
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full bg-slate-200 dark:bg-slate-700 p-3 pl-10 rounded-lg text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors duration-300" />
           <Icon name="search" className="w-5 h-5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
         </div>
         <button onClick={onAddCustomerClick} className="flex items-center bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition-all w-full sm:w-auto justify-center">
@@ -62,7 +76,7 @@ const Customers: React.FC<CustomersProps> = ({ customers, onAddCustomerClick }) 
                 </tr>
             </thead>
             <tbody>
-                {customers.map(customer => <CustomerRow key={customer.id} customer={customer} />)}
+                {filteredCustomers.map(customer => <CustomerRow key={customer.id} customer={customer} onDelete={() => onDeleteCustomer(customer.id)} />)}
             </tbody>
         </table>
       </div>
